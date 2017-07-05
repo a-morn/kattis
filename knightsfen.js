@@ -4,6 +4,7 @@ var len = readline();
 
 var target = '111110111100 110000100000';
 
+// Input
 for (var i = 0; i < len; i++) {
 	var chessboard = "";
 	for (var j = 0; j < 5; j++) {
@@ -54,6 +55,7 @@ function distance(s, t) {
 	return result;
 }
 
+// Returns array with all possible moves for @board
 function expandMoves(board) {
 	var blank = board.indexOf(' ');
 	var legitMoves = [
