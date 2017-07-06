@@ -25,23 +25,20 @@ function solve(boards, depth) {
 	})) return depth;
 	if (depth >= 10) return null;
 
+	var maxdist = 10 - depth;
+
 	//All moves
 	boards = boards.reduce(function (acc, b) {
 		return acc.concat(expandMoves(b));
-	}, []);
-
-	// Remove duplicate
-	boards = boards.reduce(function (acc, b) {
+	}, []).filter(function (b) {
+		return distance(b, target) <= maxdist;
+	})
+	//Remove duplicate
+	.reduce(function (acc, b) {
 		if (acc.some(function (s) {
 			return s === b;
 		})) return acc;else return acc.concat([b]);
 	}, []);
-
-	// Prune
-	var maxdist = 10 - depth;
-	boards = boards.filter(function (b) {
-		return distance(b, target) <= maxdist;
-	});
 
 	return solve(boards, depth + 1);
 }
@@ -58,16 +55,15 @@ function distance(s, t) {
 // Returns array with all possible moves for @board
 function expandMoves(board) {
 	var blank = board.indexOf(' ');
-	var legitMoves = [
-	// [index offset, row offset]
-	[-11, -2], [-9, -2], [-7, -1], [-3, -1], [3, 1], [7, 1], [9, 2], [11, 2]].filter(function (tup) {
-		var movingPiece = blank + tup[0];
-		return movingPiece >= 0 && movingPiece <= 24 && Math.floor(blank / 5) + tup[1] === Math.floor(movingPiece / 5);
-	}).map(function (tup) {
-		return tup[0] + blank;
-	});
+	var blankRow = ~~(blank / 5);
 
-	return legitMoves.map(function (move) {
+	return [
+	// [index offset, row offset]
+	[-11 + blank, -2], [-9 + blank, -2], [-7 + blank, -1], [-3 + blank, -1], [3 + blank, 1], [7 + blank, 1], [9 + blank, 2], [11 + blank, 2]].filter(function (tup) {
+		var movingPiece = tup[0];
+		return movingPiece >= 0 && movingPiece <= 24 && blankRow + tup[1] === ~~(movingPiece / 5);
+	}).map(function (tup) {
+		var move = tup[0];
 		if (blank > move) {
 			return board.substring(0, move) + ' ' + board.substring(move + 1, blank) + board[move] + board.substring(blank + 1, board.length);
 		} else {
@@ -75,3 +71,4 @@ function expandMoves(board) {
 		}
 	});
 }
+var line;
