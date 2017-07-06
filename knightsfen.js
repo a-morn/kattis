@@ -57,18 +57,22 @@ function expandMoves(board) {
 	var blank = board.indexOf(' ');
 	var blankRow = ~~(blank / 5);
 
-	return [
+	var moves = [
 	// [index offset, row offset]
-	[-11 + blank, -2], [-9 + blank, -2], [-7 + blank, -1], [-3 + blank, -1], [3 + blank, 1], [7 + blank, 1], [9 + blank, 2], [11 + blank, 2]].filter(function (tup) {
+	[-11 + blank, -2], [-9 + blank, -2], [-7 + blank, -1], [-3 + blank, -1], [3 + blank, 1], [7 + blank, 1], [9 + blank, 2], [11 + blank, 2]];
+
+	var result = [];
+	for (var _i2 = 0; _i2 < 8; _i2++) {
+		var tup = moves[_i2];
 		var movingPiece = tup[0];
-		return movingPiece >= 0 && movingPiece <= 24 && blankRow + tup[1] === ~~(movingPiece / 5);
-	}).map(function (tup) {
+		if (!(movingPiece >= 0 && movingPiece <= 24 && blankRow + tup[1] === ~~(movingPiece / 5))) continue;
 		var move = tup[0];
 		if (blank > move) {
-			return board.substring(0, move) + ' ' + board.substring(move + 1, blank) + board[move] + board.substring(blank + 1, board.length);
+			result.push(board.substring(0, move) + ' ' + board.substring(move + 1, blank) + board[move] + board.substring(blank + 1, board.length));
 		} else {
-			return board.substring(0, blank) + board[move] + board.substring(blank + 1, move) + ' ' + board.substring(move + 1, board.length);
+			result.push(board.substring(0, blank) + board[move] + board.substring(blank + 1, move) + ' ' + board.substring(move + 1, board.length));
 		}
-	});
+	}
+	return result;
 }
 var line;
